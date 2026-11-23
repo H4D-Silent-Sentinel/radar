@@ -1,6 +1,6 @@
 # radar
 
-Bench radar for Silent Sentinel: an Ai-Thinker RD-03D (24 GHz, ~8 m, moving targets only) standing in for a real radar, to demo the radar-to-acoustic handoff. **Not tested on hardware yet; we don't have the module.**
+Bench radar for Silent Sentinel: an Ai-Thinker RD-03D (24 GHz, ~8 m, moving targets only) standing in for a real radar, to demo the radar-to-acoustic handoff.
 
 | File | What |
 |---|---|
