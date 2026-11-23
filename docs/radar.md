@@ -18,7 +18,11 @@ The RD-03D reaches about 8 m and only reports things that move (up to 3 targets,
 | TX | GPIO17 |
 | RX | GPIO18 |
 
-GPIO17/18 are also free on a listening node. With a USB-serial adapter instead: radar TX → adapter RX, radar RX → adapter TX, 5V, GND. No firmware needed.
+GPIO17/18 are also free on a listening node.
+
+**USB-serial adapter instead of the ESP32:** radar TX → adapter RX, radar RX → adapter TX, GND → GND. No firmware needed. The radar needs **5 V power but 3.3 V signals**, so the adapter must have a separate 5 V pin with 3.3 V logic. Boards like the SparkFun Serial Basic use one jumper for both. On 3.3 V they can't power the radar, and on 5 V they send 5 V signals into the radar's RX. With one of those, power the radar from a separate 5 V source (shared GND), or use the ESP32 bridge.
+
+3D-printed enclosure: `cad/` (see `cad/README.md`).
 
 ```sh
 arduino-cli compile --fqbn $FQBN firmware/radar_bridge
