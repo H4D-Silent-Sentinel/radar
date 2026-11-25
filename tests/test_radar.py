@@ -54,8 +54,8 @@ def test_radar_hit_lands_where_the_radar_points():
     assert st["radars"][0]["online"] and len(st["radars"][0]["hits"]) == 1
 
 
-def test_handoff_radar_to_acoustic_keeps_one_track():
-    site = Site.load(SITES / "radar_handoff.json")
+def test_drone_leaving_radar_keeps_one_track():
+    site = Site.load(SITES / "radar_gap.json")
     base = Base(site)
     snaps = []
     run(site, base, NetworkSim(site, [DroneSim(DEFAULT_PATH)], seed=1),

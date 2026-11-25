@@ -6,7 +6,7 @@ index c0c4f33..a6d67f8 100644
  | `cuas/packet.py` | 24-byte LoRa packet format (matches `firmware/node/packet.h`). |
  | `cuas/sim/` | Synthetic drone / noise / wind / generator audio. |
  | `cuas/base.py`, `localize.py`, `tracker.py` | Base station: loudness position fixes, multi-sensor Kalman tracker. |
-+| `cuas/radar.py`, `firmware/radar_bridge/`, `docs/radar.md` | Bench radar (RD-03D) for the radar-to-acoustic handoff demo. |
++| `cuas/radar.py`, `firmware/radar_bridge/`, `docs/radar.md` | Bench radar (RD-03D), one input to the fused track. |
  | `cuas/visual.py`, `docs/jetson-interface.md` | Interface to the Jetson Visual-Tracker (UDP JSON both ways). |
  | `cuas/cot.py`, `cuas/mapserver.py` | Outputs: Cursor-on-Target to TAK, live local map. |
  | `cuas/sim/scenario.py` | Network simulator driving the real base code. |
@@ -14,7 +14,7 @@ index c0c4f33..a6d67f8 100644
  .venv/bin/python -m cuas sim --site sites/example_intersection.json --map      # simulated drone, map at http://127.0.0.1:8080
  .venv/bin/python -m cuas ports                                                 # find the base receiver
  .venv/bin/python -m cuas run --site sites/example_intersection.json --serial /dev/cu.usbserial-XXXX --map --cot
-+.venv/bin/python -m cuas sim --site sites/radar_handoff.json --map                # radar loses the drone, acoustic keeps the track
++.venv/bin/python -m cuas sim --site sites/radar_gap.json --map                # radar loses the drone, acoustic keeps the track
 +.venv/bin/python -m cuas listen --site sites/demo_bench_radar.json --radar /dev/cu.usbmodemXXXX --map  # bench demo: laptop mic + radar
  .venv/bin/python -m cuas detect recording.wav -v                               # run the node detector on a recording
  .venv/bin/python -m pytest                                                     # tests (also checks firmware detector == Python)
@@ -615,7 +615,7 @@ index 0000000..c6a855d
 @@ -0,0 +1,49 @@
 +# Bench radar (RD-03D)
 +
-+A small 24 GHz radar module stands in for a real air-search radar so the demo can show the handoff live: the radar locks the drone, the drone goes where the radar can't see, and the acoustic nodes keep the **same track** going (cues to the chaser never stop).
++A small 24 GHz radar module stands in for a real air-search radar. Radar plots feed the same fused track as the acoustic nodes and cameras. When the drone leaves the radar beam, the other sensors keep the **same track** number.
 +
 +The RD-03D reaches about 8 m and only reports things that move (up to 3 targets, ~10 frames/s). It sees people too, so the radar track on its own is unclassified.
 +
@@ -660,7 +660,7 @@ index 0000000..c6a855d
 +Simulated version at city scale (radar out west, the drone flies into the intersection out of radar coverage):
 +
 +```sh
-+.venv/bin/python -m cuas sim --site sites/radar_handoff.json --map
++.venv/bin/python -m cuas sim --site sites/radar_gap.json --map
 +```
 diff --git a/firmware/radar_bridge/radar_bridge.ino b/firmware/radar_bridge/radar_bridge.ino
 new file mode 100644
@@ -715,14 +715,14 @@ index 0000000..7528cfc
 +    {"id": "r1", "label": "Bench radar (RD-03D)", "lat": 40.80940, "lon": -73.96000, "height_m": 1, "yaw_deg": 0}
 +  ]
 +}
-diff --git a/sites/radar_handoff.json b/sites/radar_handoff.json
+diff --git a/sites/radar_gap.json b/sites/radar_gap.json
 new file mode 100644
 index 0000000..0fd31b5
 --- /dev/null
-+++ b/sites/radar_handoff.json
++++ b/sites/radar_gap.json
 @@ -0,0 +1,79 @@
 +{
-+  "name": "Radar handoff (radar west of Broadway & W 116th St)",
++  "name": "Radar coverage gap (radar west of Broadway & W 116th St)",
 +  "origin": [
 +    40.808,
 +    -73.964
@@ -862,8 +862,8 @@ index 0000000..4fa9301
 +    assert st["radars"][0]["online"] and len(st["radars"][0]["hits"]) == 1
 +
 +
-+def test_handoff_radar_to_acoustic_keeps_one_track():
-+    site = Site.load(SITES / "radar_handoff.json")
++def test_drone_leaving_radar_keeps_one_track():
++    site = Site.load(SITES / "radar_gap.json")
 +    base = Base(site)
 +    snaps = []
 +    run(site, base, NetworkSim(site, [DroneSim(DEFAULT_PATH)], seed=1),

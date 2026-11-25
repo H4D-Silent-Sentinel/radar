@@ -1,6 +1,6 @@
 # Bench radar (RD-03D)
 
-A small 24 GHz radar module stands in for a real air-search radar so the demo can show the handoff live: the radar locks the drone, the drone goes where the radar can't see, and the acoustic nodes keep the **same track** going (cues to the chaser never stop).
+A small 24 GHz radar module stands in for a real air-search radar. Radar plots feed the same fused track as the acoustic nodes and cameras. When the drone leaves the radar beam, the other sensors keep the **same track** number.
 
 The RD-03D reaches about 8 m and only reports things that move (up to 3 targets, ~10 frames/s). It sees people too, so the radar track on its own is unclassified.
 
@@ -49,5 +49,5 @@ arduino-cli upload  --fqbn $FQBN -p /dev/cu.usbmodemXXXX firmware/radar_bridge
 Simulated version at city scale (radar out west, the drone flies into the intersection out of radar coverage):
 
 ```sh
-.venv/bin/python -m cuas sim --site sites/radar_handoff.json --map
+.venv/bin/python -m cuas sim --site sites/radar_gap.json --map
 ```
