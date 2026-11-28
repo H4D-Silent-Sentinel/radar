@@ -1,8 +1,8 @@
 # radar
 
-Bench radar for Silent Sentinel: an Ai-Thinker RD-03D (24 GHz, ~8 m, moving targets only) standing in for a real radar, one input to the fused track.
+Bench radar for Silent Sentinel. An Ai-Thinker RD-03D (24 GHz FMCW, ~8 m range, moving targets only) provides radar plots to the fused track in place of a fielded radar.
 
-| File | What |
+| Path | Description |
 |---|---|
 | `rd03d.py` | RD-03D frame parser, encoder, serial reader |
 | `firmware/radar_bridge/` | ESP32-S3 sketch: radar UART (GPIO17/18) passed straight to USB. Compiles. |
@@ -12,4 +12,7 @@ Bench radar for Silent Sentinel: an Ai-Thinker RD-03D (24 GHz, ~8 m, moving targ
 | `radar_gap.json`, `demo_bench_radar.json` | Site files used by the patch |
 | `tests/test_radar.py` | Tests (run inside sentinel after applying the patch) |
 
-Next step when the module arrives: send its targets to ROAREE (roaree repo) as `radar` messages on udp/47012 (format in roaree's `sentinel_c2/radar.py`), so it shows on the C2 radar scope.
+## Status
+
+- [x] Frame parser and USB bridge firmware (compiles; not yet run on hardware)
+- [ ] Send targets to [ROAREE](https://github.com/H4D-Silent-Sentinel/roaree) as `radar` messages on UDP 47012 (format: `sentinel_c2/radar.py`)
