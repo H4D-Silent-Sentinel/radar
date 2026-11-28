@@ -5,6 +5,7 @@ Bench radar for Silent Sentinel. An Ai-Thinker RD-03D (24 GHz FMCW, ~8 m range, 
 | Path | Description |
 |---|---|
 | `rd03d.py` | RD-03D frame parser, encoder, serial reader |
+| `rd03d_udp.py` | Bench use: RD-03D over USB to ROAREE `radar` messages on UDP 47012, with frame-to-frame target IDs |
 | `firmware/radar_bridge/` | ESP32-S3 sketch: radar UART (GPIO17/18) passed straight to USB. Compiles. |
 | `docs/radar.md` | Wiring, bring-up, demo steps |
 | `cad/` | 3D-printed enclosure: OpenSCAD source, print-ready STLs, previews, assembly |
@@ -15,4 +16,5 @@ Bench radar for Silent Sentinel. An Ai-Thinker RD-03D (24 GHz FMCW, ~8 m range, 
 ## Status
 
 - [x] Frame parser and USB bridge firmware (compiles; not yet run on hardware)
-- [ ] Send targets to [ROAREE](https://github.com/H4D-Silent-Sentinel/roaree) as `radar` messages on UDP 47012 (format: `sentinel_c2/radar.py`)
+- [x] Bench path: USB to ROAREE `radar` messages on UDP 47012 (`rd03d_udp.py`; not yet run on hardware)
+- [ ] On-site radar station: RD-03D plots over LoRa to the base receiver (`radar_node` firmware, base receiver and ROAREE input)
